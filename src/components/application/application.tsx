@@ -1,8 +1,8 @@
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, PositionalAudio } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import classNames from 'classnames';
-import React from 'react';
-import { PCFSoftShadowMap } from 'three';
+import React, { useRef, useState } from 'react';
+import { PCFSoftShadowMap, PositionalAudio as PositionalAudioClass} from 'three';
 import { Bushes } from '../bushes';
 import { Ghosts } from '../ghosts/ghosts';
 import { Graves } from '../graves';
@@ -19,6 +19,21 @@ export interface IApplicationProps {
 };
 
 export const Application: React.FC<IApplicationProps> = ({ className }) => {
+    const [volumeEnabled, setVolumeEnabled] = useState(false);
+
+    const audioRef = useRef<PositionalAudioClass>(null);
+
+    const toggleVolume = () => {
+        console.log({audioRef, volumeEnabled})
+        if (volumeEnabled) {
+            audioRef.current?.stop();
+        } else {
+            audioRef.current?.play();
+        }
+
+        setVolumeEnabled(!volumeEnabled);
+    };
+
     return (
         <div className={classNames('application', className)}>
             <Canvas shadows={{ enabled: true, type: PCFSoftShadowMap }}>
@@ -32,7 +47,13 @@ export const Application: React.FC<IApplicationProps> = ({ className }) => {
                 <Bushes />
                 <Graves />
                 <Ghosts />
+                <mesh position={[2, 2, 2]}>
+                    <PositionalAudio url="/audio/haunted-house-ambience.mp3" autoplay={false} loop={true} ref={audioRef} />
+                </mesh>
             </Canvas>
+            <button className="application__audio-btn" onClick={toggleVolume}>
+                <img src={`/images/icons/volume-${volumeEnabled ? 'enabled' : 'disabled'}.png`} alt="Enable sound" />
+            </button>
         </div>
     );
 };

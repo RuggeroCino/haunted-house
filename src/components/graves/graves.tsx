@@ -1,3 +1,4 @@
+import { useTexture } from '@react-three/drei';
 import { Euler, Vector3 } from '@react-three/fiber';
 import React from 'react';
 import { GraveItem } from './grave-item';
@@ -23,11 +24,21 @@ const getGraveRotation = (): Euler => {
     return [0, y, z];
 }
 
+const gravePositions = [...Array(GRAVE_ITEMS)].map(getGravePosition);
+const graveRotations = [...Array(GRAVE_ITEMS)].map(getGraveRotation);
+
 export const Graves: React.FC<IGravesProps> = () => {
+    const roofTextures = useTexture({
+        map: 'images/textures/rock/color.jpg',
+        aoMap: 'images/textures/rock/ambientOcclusion.jpg',
+        normalMap: 'images/textures/rock/normal.jpg',
+        roughnessMap: 'images/textures/rock/roughness.jpg',
+    });
+
     return (
         <group>
             {[...Array(GRAVE_ITEMS).keys()].map((index) => (
-                <GraveItem key={index} position={getGravePosition()} rotation={getGraveRotation()} />
+                <GraveItem key={index} position={gravePositions[index]} rotation={graveRotations[index]} textures={roofTextures} />
             ))}
         </group>
     );

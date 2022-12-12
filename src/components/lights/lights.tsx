@@ -1,3 +1,4 @@
+import { useFrame } from '@react-three/fiber';
 import React, { useLayoutEffect, useRef } from 'react';
 import { DirectionalLight, PointLight } from 'three';
 import { geometryUtils } from '../../utils';
@@ -12,6 +13,12 @@ export const Lights: React.FC<ILightsProps> = () => {
         geometryUtils.setLightFar(directionalLightRef.current, 15);
         geometryUtils.setLightFar(doorLightRef.current, 7);
     }, []);
+
+    useFrame((state) => {
+        if (doorLightRef.current) {
+            doorLightRef.current.intensity = Math.sin(state.clock.elapsedTime) + 2;
+        }
+    });
 
     return (
         <>
