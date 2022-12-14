@@ -1,9 +1,10 @@
-import { OrbitControls, PerspectiveCamera, PositionalAudio } from '@react-three/drei';
+import { PositionalAudio } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import classNames from 'classnames';
 import React, { useRef, useState } from 'react';
 import { PCFSoftShadowMap, PositionalAudio as PositionalAudioClass} from 'three';
 import { Bushes } from '../bushes';
+import { Camera } from '../camera/camera';
 import { Ghosts } from '../ghosts/ghosts';
 import { Graves } from '../graves';
 import { Ground } from '../ground';
@@ -37,8 +38,7 @@ export const Application: React.FC<IApplicationProps> = ({ className }) => {
     return (
         <div className={classNames('application', className)}>
             <Canvas shadows={{ enabled: true, type: PCFSoftShadowMap }}>
-                <PerspectiveCamera position={[-3, 1, 5]} fov={95} near={0.1} far={100} makeDefault={true} />
-                <OrbitControls maxDistance={10} minDistance={4} maxPolarAngle={1.5} enablePan={false} />
+                <Camera />
                 <fog attach="fog" color="#262837" near={1} far={15} />
                 <color attach="background" args={["#262837"]} />
                 <Lights />
